@@ -1,9 +1,12 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
+require "rake/testtask"
 
-Dir['tasks/*.rake'].each { |file| load(file) }
-
-
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'test' << 'lib'
+  test.pattern = 'test/**/*_test.rb'
+  test.verbose = true
+end
 
 RSpec::Core::RakeTask.new(:spec) do |task|
   task.pattern = "./spec/**/*_spec.rb"
@@ -35,4 +38,4 @@ begin
 rescue LoadError
 end
 
-task :default => [:spec]
+task :default => [:spec, :test]

@@ -11,58 +11,6 @@ describe Adyen::Form do
     Adyen.configuration.default_form_params[:merchant_account] = 'TestMerchant'
   end
 
-  describe 'Action URLs' do
-
-    before(:each) do
-      # Use autodetection for the environment unless otherwise specified
-      Adyen.configuration.environment = nil
-    end
-
-    it "should generate correct testing url" do
-      Adyen::Form.url.should == 'https://test.adyen.com/hpp/select.shtml'
-    end
-
-    it "should generate a live url if the environment is set to live" do
-      Adyen.configuration.environment = :live
-      Adyen::Form.url.should == 'https://live.adyen.com/hpp/select.shtml'
-    end
-
-    it "should generate correct live url in a production environment" do
-      Adyen.configuration.stub(:autodetect_environment).and_return('live')
-      Adyen::Form.url.should. == 'https://live.adyen.com/hpp/select.shtml'
-    end
-
-    it "should generate correct live url if explicitely asked for" do
-      Adyen::Form.url(:live).should == 'https://live.adyen.com/hpp/select.shtml'
-    end
-
-    it "should generate correct testing url if the payment flow selection is set to select" do
-      Adyen.configuration.payment_flow = :select
-      Adyen::Form.url.should == 'https://test.adyen.com/hpp/select.shtml'
-    end
-
-    it "should generate correct testing url if the payment flow selection is set to pay" do
-      Adyen.configuration.payment_flow = :pay
-      Adyen::Form.url.should == 'https://test.adyen.com/hpp/pay.shtml'
-    end
-
-    it "should generate correct testing url if the payment flow selection is set to details" do
-      Adyen.configuration.payment_flow = :details
-      Adyen::Form.url.should == 'https://test.adyen.com/hpp/details.shtml'
-    end
-
-    context "with custom domain" do
-      before(:each) do
-        Adyen.configuration.payment_flow = :select
-        Adyen.configuration.payment_flow_domain = "checkout.mydomain.com"
-      end
-
-      it "should generate correct testing url" do
-        Adyen::Form.url.should == 'https://checkout.mydomain.com/hpp/select.shtml'
-      end
-    end
-  end
-
   describe 'redirect signature check' do
     before(:each) do
       # Example taken from integration manual

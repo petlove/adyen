@@ -7,7 +7,7 @@ module Adyen
         when Date, DateTime, Time
           date.strftime('%Y-%m-%d')
         else
-          raise "Invalid date notation: #{date.inspect}!" unless /^\d{4}-\d{2}-\d{2}$/ =~ date
+          raise ArgumentError, "Invalid date notation: #{date.inspect}!" unless /^\d{4}-\d{2}-\d{2}$/ =~ date
           date
         end
       end
@@ -18,7 +18,7 @@ module Adyen
         when Date, DateTime, Time
           time.strftime('%Y-%m-%dT%H:%M:%SZ')
         else
-          raise "Invalid timestamp notation: #{time.inspect}!" unless /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}Z$/ =~ time
+          raise ArgumentError, "Invalid timestamp notation: #{time.inspect}!" unless /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}Z$/ =~ time
           time
         end
       end
