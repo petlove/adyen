@@ -6,86 +6,6 @@ require 'adyen/form'
 
 describe Adyen::Form do
 
-  before(:each) do
-    Adyen.configuration.register_form_skin(:testing, '4aD37dJA', 'Kah942*$7sdp0)')
-    Adyen.configuration.default_form_params[:merchant_account] = 'TestMerchant'
-  end
-
-  describe 'redirect signature check' do
-    before(:each) do
-      # Example taken from integration manual
-
-      # Example get params sent back with redirect
-      @params = { :authResult => 'AUTHORISED', :pspReference => '1211992213193029',
-        :merchantReference => 'Internet Order 12345', :skinCode => '4aD37dJA',
-        :merchantSig => 'ytt3QxWoEhAskUzUne0P5VA9lPw='}
-    end
-
-    it "should calculate the signature string correctly" do
-      Adyen::Form.redirect_signature_string(@params).should == 'AUTHORISED1211992213193029Internet Order 123454aD37dJA'
-      params = @params.merge(:merchantReturnData => 'testing1234')
-      Adyen::Form.redirect_signature_string(params).should == 'AUTHORISED1211992213193029Internet Order 123454aD37dJAtesting1234'
-    end
-
-    it "should calculate the signature correctly" do
-      Adyen::Form.redirect_signature(@params).should == @params[:merchantSig]
-    end
-
-    it "should check the signature correctly with explicit shared signature" do
-      Adyen::Form.redirect_signature_check(@params, 'Kah942*$7sdp0)').should be_true
-    end
-
-    it "should check the signature correctly using the stored shared secret" do
-      Adyen::Form.redirect_signature_check(@params).should be_true
-    end
-
-    it "should raise ArgumentError on missing skinCode" do
-      expect do
-        @params.delete(:skinCode)
-        Adyen::Form.redirect_signature_check(@params).should be_false
-      end.to raise_error ArgumentError
-    end
-
-    it "should raise ArgumentError on empty input" do
-      expect do
-        Adyen::Form.redirect_signature_check({}).should be_false
-      end.to raise_error ArgumentError
-    end
-
-    it "should detect a tampered field" do
-      Adyen::Form.redirect_signature_check(@params.merge(:pspReference => 'tampered')).should be_false
-    end
-
-    it "should detect a tampered signature" do
-      Adyen::Form.redirect_signature_check(@params.merge(:merchantSig => 'tampered')).should be_false
-    end
-
-  end
-
-  describe 'redirect URL generation' do
-    before(:each) do
-      @attributes = { :currency_code => 'GBP', :payment_amount => 10000, :ship_before_date => Date.today,
-        :merchant_reference => 'Internet Order 12345', :skin => :testing,
-        :session_validity => Time.now + 3600 }
-
-      @redirect_url = Adyen::Form.redirect_url(@attributes)
-    end
-
-    it "should return an URL pointing to the adyen server" do
-      @redirect_url.should =~ %r[^#{Adyen::Form.url}]
-    end
-
-    it "should include all provided attributes" do
-      params = @redirect_url.split('?', 2).last.split('&').map { |param| param.split('=', 2).first }
-      params.should include(*(@attributes.keys.map { |k| Adyen::Form.camelize(k) }))
-    end
-
-    it "should include the merchant signature" do
-      params = @redirect_url.split('?', 2).last.split('&').map { |param| param.split('=', 2).first }
-      params.should include('merchantSig')
-    end
-  end
-
   describe 'hidden fields generation' do
     include APISpecHelper
     subject { %Q'<form action="#{CGI.escapeHTML(Adyen::Form.url)}" method="post">#{Adyen::Form.hidden_fields(@attributes)}</form>' }
@@ -193,23 +113,5 @@ describe Adyen::Form do
       end
     end
 
-  end
-
-  describe "flatten" do
-   let(:parameters) do
-      {
-        :billing_address => { :street => 'My Street'}
-      }
-    end
-
-    it "returns empty hash for nil input" do
-      Adyen::Form.flatten(nil).should == {}
-    end
-
-    it "flattens hash and prefixes keys" do
-      Adyen::Form.flatten(parameters).should == {
-        'billingAddress.street' =>  'My Street'
-      }
-    end
   end
 end

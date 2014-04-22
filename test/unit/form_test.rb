@@ -1,5 +1,4 @@
 # encoding: UTF-8
-
 require 'test_helper'
 
 class FormTest < Minitest::Test
@@ -10,7 +9,11 @@ class FormTest < Minitest::Test
 
     @params = { :authResult => 'AUTHORISED', :pspReference => '1211992213193029',
         :merchantReference => 'Internet Order 12345', :skinCode => '4aD37dJA',
-        :merchantSig => 'ytt3QxWoEhAskUzUne0P5VA9lPw='}    
+        :merchantSig => 'ytt3QxWoEhAskUzUne0P5VA9lPw='}
+
+    @attributes = { :currency_code => 'GBP', :payment_amount => 10000, :ship_before_date => Date.today,
+      :merchant_reference => 'Internet Order 12345', :skin => :testing,
+      :session_validity => Time.now + 3600 }    
   end
 
   def test_default_form_action_url
@@ -44,24 +47,15 @@ class FormTest < Minitest::Test
     assert_equal 'https://checkout.mydomain.com/hpp/select.shtml', Adyen::Form.url
   end
 
-  # it "should calculate the signature string correctly" do
-  #   Adyen::Form.redirect_signature_string(@params).should == 'AUTHORISED1211992213193029Internet Order 123454aD37dJA'
-  #   params = @params.merge(:merchantReturnData => 'testing1234')
-  #   Adyen::Form.redirect_signature_string(params).should == 'AUTHORISED1211992213193029Internet Order 123454aD37dJAtesting1234'
-  # end
+  def test_redirect_signature
+    signature_base = Adyen::Form.redirect_signature_string(@params)
+    assert_equal 'AUTHORISED1211992213193029Internet Order 123454aD37dJA', signature_base
 
-  # it "should calculate the signature correctly" do
-  #   Adyen::Form.redirect_signature(@params).should == @params[:merchantSig]
-  # end
+    signature_base_with_return_data = Adyen::Form.redirect_signature_string(@params.merge(:merchantReturnData => 'testing1234'))
+    assert_equal 'AUTHORISED1211992213193029Internet Order 123454aD37dJAtesting1234', signature_base_with_return_data
 
-  # it "should check the signature correctly with explicit shared signature" do
-  #   Adyen::Form.redirect_signature_check(@params, 'Kah942*$7sdp0)').should be_true
-  # end
-
-  # it "should check the signature correctly using the stored shared secret" do
-  #   Adyen::Form.redirect_signature_check(@params).should be_true
-  # end
-
+    assert_equal @params[:merchantSig], Adyen::Form.redirect_signature(@params)
+  end
 
   def test_raises_on_missing_required_data
     @params.delete(:skinCode)
@@ -70,8 +64,24 @@ class FormTest < Minitest::Test
   end
 
   def test_redirect_signature_check
+    assert Adyen::Form.redirect_signature_check(@params, 'Kah942*$7sdp0)')
     assert Adyen::Form.redirect_signature_check(@params)
     assert !Adyen::Form.redirect_signature_check(@params.merge(:pspReference => 'tampered'))
     assert !Adyen::Form.redirect_signature_check(@params.merge(:merchantSig => 'tampered'))
+  end
+
+  def test_redirect_url
+    redirect_url = Adyen::Form.redirect_url(@attributes)
+    assert redirect_url.start_with?(Adyen::Form.url)
+
+    param_names = redirect_url.split('?', 2).last.split('&').map { |param| param.split('=', 2).first }
+    assert @attributes.keys.all? { |k| param_names.include?(Adyen::Form.camelize(k)) }
+    assert param_names.include?('merchantSig')
+  end
+
+  def test_flatten
+    parameters = { :billing_address => { :street => 'My Street'} }
+    assert_equal Hash.new, Adyen::Form.flatten(nil)
+    assert_equal 'My Street', Adyen::Form.flatten(parameters)['billingAddress.street']
   end
 end

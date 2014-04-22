@@ -76,21 +76,5 @@ module Adyen
       recurring_checks = { :recurring => false }
       have_adyen_payment_form(recurring_checks.merge(checks))
     end
-
-    def assert_adyen_payment_form(subject, checks = {})
-      default_checks = {:merchant_sig => :anything, :payment_amount => :anything, :currency_code => :anything, :skin_code => :anything }
-      assert Adyen::Matchers::XPathPaymentFormCheck.check(subject, default_checks.merge(checks)), 'No Adyen payment form found'
-    end
-
-    def assert_adyen_recurring_payment_form(subject, checks = {})
-      recurring_checks = { :recurring => true, :shopper_email => :anything, :shopper_reference => :anything }
-      assert_adyen_payment_form(subject, recurring_checks.merge(checks))
-    end
-
-    def assert_adyen_single_payment_form(subject, checks = {})
-      recurring_checks = { :recurring => false }
-      assert_adyen_payment_form(subject, recurring_checks.merge(checks))
-    end
-
   end
 end
