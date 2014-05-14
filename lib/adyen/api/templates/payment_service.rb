@@ -120,6 +120,14 @@ EOS
 
       # @private
       FRAUD_OFFSET_PARTIAL = '<payment:fraudOffset>%s</payment:fraudOffset>'
+
+      # @private
+      BROWSER_INFO_PARTIAL = <<EOS
+        <payment:browserInfo>
+          <payment:acceptHeader>%s</payment:acceptHeader>
+          <payment:userAgent>%s</payment:userAgent>
+        </payment:browserInfo>
+EOS
     end
   end
 end
