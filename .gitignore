@@ -8,4 +8,5 @@ adyen-*.gem
 .DS_Store
 t.rb
 spec/functional/initializer.rb
+spec/functional/3d_params.yml
 Gemfile.lock
