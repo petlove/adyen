@@ -244,15 +244,8 @@ module Adyen
         end
 
         def params
-          return @params if @params
-
-          if xml_querier.xpath('//payment:authoriseResponse').empty?
-            node = 'authorise3dResponse'
-          else
-            node = 'authoriseResponse'
-          end
-
-          @params = xml_querier.xpath("//payment:#{node}/payment:paymentResult") do |result|
+          xpath = "//payment:authoriseResponse/payment:paymentResult | //payment:authorise3dResponse/payment:paymentResult"
+          @params ||= xml_querier.xpath(xpath) do |result|
             initial = {
               :psp_reference  => result.text('./payment:pspReference'),
               :result_code    => result.text('./payment:resultCode'),

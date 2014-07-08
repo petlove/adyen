@@ -139,7 +139,7 @@ module Adyen
     # @param          [String]         md             MD parameter returned by Adyen on redirect after issuer 3-D secure auth.
     # @param          [String]         pa_response    PaRes parameter returned by Adyen on redirect after issuer 3-D secure auth.
     # @param          [String]         shopper_ip     Shopper IP address.
-    # @param          [Hash]           broser_info    Key value of user agent and accept header for 3d secure.
+    # @param          [Hash]           browser_info   Key value of user agent and accept header for 3d secure.
     #
     # @option browser_info [String]    :user_agent    Request User Agent.
     # @option browser_info [String]    :accept_header Request Accept Header.
