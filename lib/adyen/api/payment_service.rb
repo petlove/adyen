@@ -199,7 +199,7 @@ module Adyen
         ENROLLED_3D = 'RedirectShopper'
 
         response_attrs :result_code, :auth_code, :refusal_reason, :psp_reference,
-          :pa_request, :md, :issuer_url
+          :pa_request, :md, :issuer_url, :additional_data
 
         def success?
           super && params[:result_code] == AUTHORISED
@@ -250,6 +250,7 @@ module Adyen
               :psp_reference  => result.text('./payment:pspReference'),
               :result_code    => result.text('./payment:resultCode'),
               :auth_code      => result.text('./payment:authCode'),
+              :additional_data => parse_additional_data(result.xpath('.//payment:additionalData')),
               :refusal_reason => (invalid_request? ? fault_message : result.text('./payment:refusalReason'))
             }
 
@@ -264,6 +265,23 @@ module Adyen
             initial
           end
         end
+
+        private
+          def parse_additional_data(xpath)
+            if xpath.empty?
+              {}
+            else
+              results = {}
+
+              xpath.map do |node|
+                key = node.text('./payment:entry/payment:key')
+                value = node.text('./payment:entry/payment:value')
+                results[key] = value unless key.empty?
+              end
+
+              results
+            end
+          end
       end
 
       class ModificationResponse < Response
