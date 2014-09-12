@@ -104,6 +104,8 @@ module Adyen
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
     def authorise_payment(reference, amount, shopper, card, *args)
+
+
       options = if args.first.is_a? Hash
                   { :recurring => false, :fraud_offset => nil }.merge!(args.first)
                 else
@@ -116,6 +118,22 @@ module Adyen
                  :card         => card }
 
       PaymentService.new(params.merge(options)).authorise_payment
+    end
+
+    def authorise_boleto_payment(reference, amount, shopper, boleto, *args)
+
+      options = if args.first.is_a? Hash
+                  { :recurring => false, :fraud_offset => nil }.merge!(args.first)
+                else
+                  { :recurring => args[0] || false, :fraud_offset => args[1] }
+                end
+
+      params = { :reference    => reference,
+                 :amount       => amount,
+                 :shopper      => shopper,
+                 :boleto       => boleto }
+
+      PaymentService.new(params.merge(options)).authorise_boleto_payment
     end
 
     # Authorise a payment after 3D redirect.
