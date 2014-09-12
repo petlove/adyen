@@ -42,7 +42,7 @@ module Adyen
 
       # @see API.authorise_payment
       def authorise_payment
-        make_payment_request(authorise_payment_request_body, AuthorisationResponse)
+            make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
       def authorise_boleto_payment
@@ -99,14 +99,10 @@ module Adyen
         payment_request_body(content)
       end
 
-      # --------------------------------------------------- VitulliCode
-
       def authorise_boleto_payment_request_body
         content = boleto_partial
         payment_boleto_request_body(content)
       end
-
-      # --------------------------------------------------- VitulliCode
 
       def authorise3d_payment_request_body
         content = browser_info_partial
@@ -137,6 +133,15 @@ module Adyen
         content << shopper_partial if @params[:shopper]
         content << fraud_offset_partial if @params[:fraud_offset]
         content << browser_info_partial if @params[:browser_info]
+
+        LAYOUT % [@params[:merchant_account], @params[:reference], content]
+      end
+
+      def payment_boleto_request_body(content)
+        validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
+
+        content << amount_partial
+        content << boleto_partial if @params[:boleto]
 
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
@@ -179,14 +184,10 @@ module Adyen
         end
       end
 
-      # --------------------------------------------------- VitulliCode
-
       def boleto_partial
           boleto  = @params[:boleto].values_at(:holder_name, :number, :cvc, :expiry_year)
           BOLETO_PARTIAL % boleto
       end
-
-      # --------------------------------------------------- VitulliCode
 
       def installments_partial
         if @params[:installments] and @params[:installments][:value]

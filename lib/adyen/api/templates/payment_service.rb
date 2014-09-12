@@ -65,7 +65,7 @@ EOS
         </payment:amount>
 EOS
 
-      # @private
+
       BOLETO_PARTIAL = <<EOS
         <billingAddress>
           <ns3:city xmlns:ns3="http://common.services.adyen.com">São Paulo</ns3:city>
@@ -86,7 +86,6 @@ EOS
         <shopperStatement>Aceitar o pagamento até 15 dias após o vencimento. Não cobrar juros. Não aceitar o pagamento com cheque.</shopperStatement>
         <socialSecurityNumber>"36854780870"</socialSecurityNumber>
 EOS
-
 
       # @private
       CARD_PARTIAL = <<EOS
