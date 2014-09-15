@@ -117,12 +117,11 @@ EOS
           post.basic_auth(Adyen.configuration.api_username, Adyen.configuration.api_password)
           post.body = ENVELOPE % data
 
-          ap post
-
           request = Net::HTTP.new(endpoint.host, endpoint.port)
           request.use_ssl = true
           request.ca_file = CACERT
           request.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          request.set_debug_output $stderr
 
           request.start do |http|
             http_response = http.request(post)
