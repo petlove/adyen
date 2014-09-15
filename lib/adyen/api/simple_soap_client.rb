@@ -105,6 +105,7 @@ EOS
       # @param [String]   data           The XML data to post to the remote action.
       # @param [Response] response_class The Response subclass used to wrap the response from Adyen.
       def call_webservice_action(action, data, response_class)
+        ap data
         if response = self.class.stubbed_response
           self.class.stubbed_response = nil
           response
