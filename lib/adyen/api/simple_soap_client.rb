@@ -121,7 +121,7 @@ EOS
           request.use_ssl = true
           request.ca_file = CACERT
           request.verify_mode = OpenSSL::SSL::VERIFY_PEER
-          request.set_debug_output $stderr
+          request.set_debug_output $stdout
 
           request.start do |http|
             http_response = http.request(post)
