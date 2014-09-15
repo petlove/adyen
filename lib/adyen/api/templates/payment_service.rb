@@ -70,16 +70,16 @@ EOS
         <billingAddress>
           <ns3:city xmlns:ns3="http://common.services.adyen.com">%s</ns3:city>
           <ns4:country xmlns:ns4="http://common.services.adyen.com">"BR"</ns4:country>
-          <ns5:houseNumberOrName xmlns:ns5="http://common.services.adyen.com">s%</ns5:houseNumberOrName>
-          <ns6:postalCode xmlns:ns6="http://common.services.adyen.com">s%</ns6:postalCode>
-          <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">s%</ns7:stateOrProvince>
-          <ns8:street xmlns:ns8="http://common.services.adyen.com">s%</ns8:street>
+          <ns5:houseNumberOrName xmlns:ns5="http://common.services.adyen.com">%s</ns5:houseNumberOrName>
+          <ns6:postalCode xmlns:ns6="http://common.services.adyen.com">%s</ns6:postalCode>
+          <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">%s</ns7:stateOrProvince>
+          <ns8:street xmlns:ns8="http://common.services.adyen.com">%s</ns8:street>
         </billingAddress>
         <deliveryDate xmlns="http://payment.services.adyen.com">2014-08-22T23:00:00.000Z</deliveryDate>
         <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_santander</selectedBrand>
         <shopperName xmlns="http://payment.services.adyen.com">
-          <ns9:firstName xmlns:ns9="http://common.services.adyen.com">s%</ns9:firstName>
-          <ns10:lastName xmlns:ns10="http://common.services.adyen.com">s%</ns10:lastName>
+          <ns9:firstName xmlns:ns9="http://common.services.adyen.com">%s</ns9:firstName>
+          <ns10:lastName xmlns:ns10="http://common.services.adyen.com">%s</ns10:lastName>
         </shopperName>
         <shopperStatement>Aceitar o pagamento até 15 dias após o vencimento. Não cobrar juros. Não aceitar o pagamento com cheque.</shopperStatement>
         <socialSecurityNumber>"36854780870"</socialSecurityNumber>
