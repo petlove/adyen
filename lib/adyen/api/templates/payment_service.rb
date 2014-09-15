@@ -68,9 +68,9 @@ EOS
 
       BOLETO_PARTIAL = <<EOS
         <billingAddress>
-          <city xmlns:ns3="http://common.services.adyen.com">%s</city>
+          <ns3:city xmlns:ns3="http://common.services.adyen.com">%s</ns3:city>
           <ns4:country xmlns:ns4="http://common.services.adyen.com">"BR"</ns4:country>
-          <house xmlns:ns5="http://common.services.adyen.com">s%</house>
+          <ns5:houseNumberOrName xmlns:ns5="http://common.services.adyen.com">s%</ns5:houseNumberOrName>
           <ns6:postalCode xmlns:ns6="http://common.services.adyen.com">s%</ns6:postalCode>
           <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">s%</ns7:stateOrProvince>
           <ns8:street xmlns:ns8="http://common.services.adyen.com">s%</ns8:street>
