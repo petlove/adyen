@@ -143,6 +143,8 @@ module Adyen
         content << amount_partial
         content << boleto_partial if @params[:boleto]
 
+        ap content
+
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
 
