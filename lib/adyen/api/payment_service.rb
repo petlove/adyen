@@ -225,6 +225,7 @@ module Adyen
         }
 
         AUTHORISED = 'Authorised'
+        RECEIVED = 'Received'
         REFUSED    = 'Refused'
         ENROLLED_3D = 'RedirectShopper'
 
@@ -232,7 +233,7 @@ module Adyen
           :pa_request, :md, :issuer_url
 
         def success?
-          super && params[:result_code] == AUTHORISED
+          super && params[:result_code] == AUTHORISED || RECEIVED
         end
 
         def refused?
