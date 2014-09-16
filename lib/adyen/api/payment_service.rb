@@ -140,7 +140,7 @@ module Adyen
       def payment_boleto_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
-        content << amount_partial
+        content << amount_boleto_partial
         # content << boleto_partial if @params[:boleto]
 
         ap content
@@ -173,6 +173,10 @@ module Adyen
 
       def amount_partial
         AMOUNT_PARTIAL % @params[:amount].values_at(:currency, :value)
+      end
+
+      def amount_boleto_partial
+        AMOUNT_BOLETO_PARTIAL % @params[:amount].values_at(:currency, :value)
       end
 
       def card_partial

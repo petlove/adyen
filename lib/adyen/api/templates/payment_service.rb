@@ -65,6 +65,14 @@ EOS
         </payment:amount>
 EOS
 
+      # @private
+      AMOUNT_BOLETO_PARTIAL = <<EOS
+        <amount>
+          <ns1:currency xmlns:ns1="http://common.services.adyen.com">%s</ns1:currency>
+          <ns2:value xmlns:ns2="http://common.services.adyen.com">%s</ns2:value>
+        </amount>
+EOS
+
 
       BOLETO_PARTIAL = <<EOS
         <billingAddress>
