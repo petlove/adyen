@@ -145,7 +145,7 @@ module Adyen
 
         ap content
 
-        LAYOUT % [@params[:merchant_account], @params[:reference], content]
+        BOLETO_LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
 
       def capture_request_body

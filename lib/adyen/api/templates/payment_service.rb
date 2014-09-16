@@ -46,6 +46,18 @@ EOS
     </payment:authorise>
 EOS
 
+
+      BOLETO_LAYOUT = <<EOS
+    <authorise xmlns="http://payment.services.adyen.com"> 
+      <paymentRequest>
+        <merchantAccount>%s</merchantAccount>
+        <reference>%s</reference>
+%s
+      </paymentRequest>
+    </authorise>
+EOS
+
+
       # @private
       LAYOUT_3D = <<EOS
     <payment:authorise3d xmlns:payment="http://payment.services.adyen.com" xmlns:recurring="http://recurring.services.adyen.com" xmlns:common="http://common.services.adyen.com">
