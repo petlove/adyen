@@ -122,11 +122,11 @@ module Adyen
 
     def authorise_boleto_payment(reference, amount, shopper, boleto, *args)
 
-      options = if args.first.is_a? Hash
-                  { :recurring => false, :fraud_offset => nil }.merge!(args.first)
-                else
-                  { :recurring => args[0] || false, :fraud_offset => args[1] }
-                end
+      # options = if args.first.is_a? Hash
+      #             { :recurring => false, :fraud_offset => nil }.merge!(args.first)
+      #           else
+      #             { :recurring => args[0] || false, :fraud_offset => args[1] }
+      #           end
 
       params = { :reference    => reference,
                  :amount       => amount,
