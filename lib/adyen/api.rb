@@ -127,13 +127,12 @@ module Adyen
       #           else
       #             { :recurring => args[0] || false, :fraud_offset => args[1] }
       #           end
-
       params = { :reference    => reference,
                  :amount       => amount,
                  :shopper      => shopper,
                  :boleto       => boleto }
 
-      PaymentService.new(params.merge(options)).authorise_boleto_payment
+      PaymentService.new(params).authorise_boleto_payment
     end
 
     # Authorise a payment after 3D redirect.
