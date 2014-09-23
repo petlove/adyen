@@ -102,7 +102,7 @@ EOS
           <ns10:lastName xmlns:ns10="http://common.services.adyen.com">%s</ns10:lastName>
         </shopperName>
         <shopperStatement>Aceitar o pagamento até 15 dias após o vencimento. Não cobrar juros. Não aceitar o pagamento com cheque.</shopperStatement>
-        <socialSecurityNumber>36854780870</socialSecurityNumber>
+        <socialSecurityNumber>%s</socialSecurityNumber>
 EOS
 
       # @private
