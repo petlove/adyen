@@ -141,10 +141,7 @@ module Adyen
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
         content << amount_boleto_partial
-        # content << boleto_partial if @params[:boleto]
-
-        ap content
-
+        
         BOLETO_LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
 
