@@ -188,7 +188,7 @@ module Adyen
       end
 
       def boleto_partial
-          boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :firstName, :lastName, :social_security)
+          boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :deliveryDate, :firstName, :lastName, :social_security)
           ap boleto
           BOLETO_PARTIAL % boleto
       end

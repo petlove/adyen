@@ -95,7 +95,7 @@ EOS
           <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">%s</ns7:stateOrProvince>
           <ns8:street xmlns:ns8="http://common.services.adyen.com">%s</ns8:street>
         </billingAddress>
-        <deliveryDate xmlns="http://payment.services.adyen.com">2014-10-27T23:00:00.000Z</deliveryDate>
+        <deliveryDate xmlns="http://payment.services.adyen.com">%s</deliveryDate>
         <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_santander</selectedBrand>
         <shopperName xmlns="http://payment.services.adyen.com">
           <ns9:firstName xmlns:ns9="http://common.services.adyen.com">%s</ns9:firstName>
