@@ -88,6 +88,7 @@ module Adyen
       private
 
       def make_payment_request(data, response_class)
+        binding.pry
         call_webservice_action('authorise', data, response_class)
       end
 
