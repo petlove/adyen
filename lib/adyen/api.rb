@@ -105,6 +105,7 @@ module Adyen
     #                                                 authorisation status.
     def authorise_payment(reference, amount, shopper, card, *args)
 
+      binding.pry
 
       options = if args.first.is_a? Hash
                   { :recurring => false, :fraud_offset => nil }.merge!(args.first)
