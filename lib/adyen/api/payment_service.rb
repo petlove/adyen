@@ -42,6 +42,7 @@ module Adyen
 
       # @see API.authorise_payment
       def authorise_payment
+            binding.pry
             make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
