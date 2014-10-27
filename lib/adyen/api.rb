@@ -213,7 +213,8 @@ module Adyen
                  :amount    => amount,
                  :shopper   => shopper,
                  :recurring_detail_reference => recurring_detail_reference,
-                 :fraud_offset => fraud_offset }
+                 :fraud_offset => fraud_offset,
+                 :installments => amount[:installments] }
       PaymentService.new(params).authorise_recurring_payment
     end
 
