@@ -52,11 +52,13 @@ module Adyen
 
       # @see API.authorise3d_payment
       def authorise3d_payment
+        binding.pry
         make_payment_request(authorise3d_payment_request_body, AuthorisationResponse)
       end
 
       # @see API.authorise_recurring_payment
       def authorise_recurring_payment
+        binding.pry
         make_payment_request(authorise_recurring_payment_request_body, AuthorisationResponse)
       end
 
@@ -67,16 +69,19 @@ module Adyen
 
       # @see API.capture_payment
       def capture
+        binding.pry
         make_payment_request(capture_request_body, CaptureResponse)
       end
 
       # @see API.refund_payment
       def refund
+        binding.pry
         make_payment_request(refund_request_body, RefundResponse)
       end
 
       # @see API.cancel_payment
       def cancel
+        binding.pry
         make_payment_request(cancel_request_body, CancelResponse)
       end
 
