@@ -42,7 +42,7 @@ module Adyen
 
       # @see API.authorise_payment
       def authorise_payment
-            binding.pry
+            
             make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
@@ -52,13 +52,13 @@ module Adyen
 
       # @see API.authorise3d_payment
       def authorise3d_payment
-        binding.pry
+        
         make_payment_request(authorise3d_payment_request_body, AuthorisationResponse)
       end
 
       # @see API.authorise_recurring_payment
       def authorise_recurring_payment
-        binding.pry
+        
         make_payment_request(authorise_recurring_payment_request_body, AuthorisationResponse)
       end
 
@@ -69,19 +69,19 @@ module Adyen
 
       # @see API.capture_payment
       def capture
-        binding.pry
+        
         make_payment_request(capture_request_body, CaptureResponse)
       end
 
       # @see API.refund_payment
       def refund
-        binding.pry
+        
         make_payment_request(refund_request_body, RefundResponse)
       end
 
       # @see API.cancel_payment
       def cancel
-        binding.pry
+        
         make_payment_request(cancel_request_body, CancelResponse)
       end
 
@@ -93,7 +93,7 @@ module Adyen
       private
 
       def make_payment_request(data, response_class)
-        binding.pry
+        
         call_webservice_action('authorise', data, response_class)
       end
 
@@ -202,9 +202,7 @@ module Adyen
 
       def installments_partial
         if @params[:installments]
-        # if @params[:installments] and @params[:installments][:value]
           INSTALLMENTS_PARTIAL % @params[:installments]
-          # INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
         end
       end
 
