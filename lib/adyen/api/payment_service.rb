@@ -203,7 +203,8 @@ module Adyen
       def installments_partial
         if @params[:installments]
         # if @params[:installments] and @params[:installments][:value]
-          INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
+          INSTALLMENTS_PARTIAL % @params[:installments]
+          # INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
         end
       end
 
