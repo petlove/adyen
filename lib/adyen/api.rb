@@ -104,9 +104,7 @@ module Adyen
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
     def authorise_payment(reference, amount, shopper, card, *args)
-
       
-
       options = if args.first.is_a? Hash
                   { :recurring => false, :fraud_offset => nil }.merge!(args.first)
                 else
@@ -116,7 +114,8 @@ module Adyen
       params = { :reference    => reference,
                  :amount       => amount,
                  :shopper      => shopper,
-                 :card         => card }
+                 :card         => card, 
+                 :installments => amount[:installments] }
 
       PaymentService.new(params.merge(options)).authorise_payment
     end
