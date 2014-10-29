@@ -299,7 +299,7 @@ module Adyen
             initial
           end
         end
-        
+
         private
           def parse_additional_data(xpath)
             if xpath.empty?
@@ -307,9 +307,9 @@ module Adyen
             else
               results = {}
 
-              xpath.map do |node|
-                key = node.text('./payment:entry/payment:key')
-                value = node.text('./payment:entry/payment:value')
+              xpath.xpath('./payment:entry').map do |node|
+                key = node.text('./payment:key')
+                value = node.text('./payment:value')
                 results[key] = value unless key.empty?
               end
 
