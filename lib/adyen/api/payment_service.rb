@@ -41,24 +41,23 @@ module Adyen
       ENDPOINT_URI = 'https://pal-%s.adyen.com/pal/servlet/soap/Payment'
 
       # @see API.authorise_payment
-      def authorise_payment
-            
+      def authorise_payment            
             make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
+
+#vitulliCode: método semelhante ao "authorise_payment", porém com os elementos do boleto 
 
       def authorise_boleto_payment
         make_payment_request(authorise_boleto_payment_request_body, AuthorisationResponse)
       end
 
       # @see API.authorise3d_payment
-      def authorise3d_payment
-        
+      def authorise3d_payment        
         make_payment_request(authorise3d_payment_request_body, AuthorisationResponse)
       end
 
       # @see API.authorise_recurring_payment
-      def authorise_recurring_payment
-        
+      def authorise_recurring_payment       
         make_payment_request(authorise_recurring_payment_request_body, AuthorisationResponse)
       end
 
@@ -69,19 +68,16 @@ module Adyen
 
       # @see API.capture_payment
       def capture
-        
         make_payment_request(capture_request_body, CaptureResponse)
       end
 
       # @see API.refund_payment
-      def refund
-        
+      def refund  
         make_payment_request(refund_request_body, RefundResponse)
       end
 
       # @see API.cancel_payment
       def cancel
-        
         make_payment_request(cancel_request_body, CancelResponse)
       end
 
@@ -92,8 +88,7 @@ module Adyen
 
       private
 
-      def make_payment_request(data, response_class)
-        
+      def make_payment_request(data, response_class)        
         call_webservice_action('authorise', data, response_class)
       end
 
@@ -105,6 +100,8 @@ module Adyen
         end
         payment_request_body(content)
       end
+
+#vitulliCode: método que vai enviar as informações para montar o corpo do xml a ser enviado para adyen
 
       def authorise_boleto_payment_request_body
         content = boleto_partial
@@ -132,6 +129,8 @@ module Adyen
         payment_request_body(content)
       end
 
+# vitulliCode: método modificado para que fosse inserido Installments na requisição se houver
+
       def payment_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
@@ -143,6 +142,8 @@ module Adyen
 
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
+
+# vitulliCode: método que vai usar o layout e as informações passadas para montar o XML final a ser passado para a Adyen
 
       def payment_boleto_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
@@ -194,10 +195,14 @@ module Adyen
         end
       end
 
+# vitulliCode: método que vai usar o layout e as informações passadas para montar o XML a ser passado para a Adyen
+
       def boleto_partial
           boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :deliveryDate, :firstName, :lastName, :social_security)
           BOLETO_PARTIAL % boleto
       end
+
+# vitulliCode: método que vai usar o layout e as informações de parcelas (installments) passadas para montar o XML a ser enviado para a Adyen
 
       def installments_partial
         if @params[:installments]

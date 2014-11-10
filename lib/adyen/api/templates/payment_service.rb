@@ -46,6 +46,7 @@ EOS
     </payment:authorise>
 EOS
 
+# vitulliCode: layout necessário para criar esqueleto XML do boleto
 
       BOLETO_LAYOUT = <<EOS
     <authorise xmlns="http://payment.services.adyen.com"> 
@@ -77,6 +78,10 @@ EOS
         </payment:amount>
 EOS
 
+
+
+# vitulliCode: layout necessário para criar esqueleto XML do amount do boleto
+
       # @private
       AMOUNT_BOLETO_PARTIAL = <<EOS
         <amount>
@@ -85,6 +90,8 @@ EOS
         </amount>
 EOS
 
+
+# vitulliCode: layout necessário para criar corpo XML do boleto
 
       BOLETO_PARTIAL = <<EOS
         <billingAddress>
@@ -115,6 +122,10 @@ EOS
           <payment:expiryMonth>%02d</payment:expiryMonth>
         </payment:card>
 EOS
+
+
+
+# vitulliCode: layout necessário para criar partial dos installments, se houver
 
       # @private
       INSTALLMENTS_PARTIAL = <<EOS
