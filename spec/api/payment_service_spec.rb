@@ -106,9 +106,10 @@ describe Adyen::API::PaymentService do
         #:start_month => ,
         #:start_year => ,
       },
-      :installments => {
-        :value => 6
-      },
+      # :installments => {
+      #   :value => 6
+      # },
+      :installments => 6,
       :recurring_detail_reference => 'RecurringDetailReference1',
       :fraud_offset => 30
     }

@@ -115,7 +115,10 @@ module Adyen
                  :amount       => amount,
                  :shopper      => shopper,
                  :card         => card, 
-                 :installments => amount[:installments] }
+                 # :installments => amount[:installments] 
+               }
+
+      binding.pry
 
       PaymentService.new(params.merge(options)).authorise_payment
     end
@@ -210,7 +213,6 @@ module Adyen
     #                                                 authorisation status.
     def authorise_recurring_payment(reference, amount, shopper, recurring_detail_reference = 'LATEST', fraud_offset = nil)
       
-      
 
       params = { :reference => reference,
                  :amount    => amount,
@@ -218,6 +220,9 @@ module Adyen
                  :recurring_detail_reference => recurring_detail_reference,
                  :fraud_offset => fraud_offset,
                  :installments => amount[:installments] }
+
+      binding.pry
+
       PaymentService.new(params).authorise_recurring_payment
     end
 
