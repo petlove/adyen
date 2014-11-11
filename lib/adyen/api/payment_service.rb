@@ -205,8 +205,8 @@ module Adyen
 # vitulliCode: método que vai usar o layout e as informações de parcelas (installments) passadas para montar o XML a ser enviado para a Adyen
 
       def installments_partial
-        if @params[:installments]
-          INSTALLMENTS_PARTIAL % @params[:installments]
+        if @params[:installments] && @params[:installments][:value]
+          INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
         end
       end
 

@@ -211,6 +211,9 @@ module Adyen
     #
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
+
+#vitulliCode: added options 
+
     def authorise_recurring_payment(reference, amount, shopper, options, recurring_detail_reference = 'LATEST', fraud_offset = nil)
       
 
@@ -222,7 +225,7 @@ module Adyen
 
       binding.pry
 
-      PaymentService.new(params).authorise_recurring_payment
+      PaymentService.new(params.merge(options)).authorise_recurring_payment
     end
 
     # Authorise a ‘one-click’ payment. A specific contract detail *has* to be specified.
