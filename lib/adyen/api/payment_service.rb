@@ -240,6 +240,10 @@ module Adyen
         response_attrs :result_code, :auth_code, :refusal_reason, :psp_reference, :additional_data,
           :pa_request, :md, :issuer_url
 
+#vitulliCode: this method was modified in order to receive the "received" notification
+# respose about billet payment
+
+
         def success?
           if super && params[:result_code] == AUTHORISED
             true
