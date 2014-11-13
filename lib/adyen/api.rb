@@ -211,7 +211,7 @@ module Adyen
 
 #vitulliCode: added options 
 
-    def authorise_recurring_payment(reference, amount, shopper, options, recurring_detail_reference = 'LATEST', fraud_offset = nil)
+    def authorise_recurring_payment(reference, amount, shopper, recurring_detail_reference = 'LATEST', fraud_offset = nil, options)
       
 
       params = { :reference => reference,

@@ -42,7 +42,7 @@ module Adyen
 
       # @see API.authorise_payment
       def authorise_payment            
-            make_payment_request(authorise_payment_request_body, AuthorisationResponse)
+        make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
 #vitulliCode: método semelhante ao "authorise_payment", porém com os elementos do boleto 
@@ -205,7 +205,7 @@ module Adyen
 # vitulliCode: método que vai usar o layout e as informações de parcelas (installments) passadas para montar o XML a ser enviado para a Adyen
 
       def installments_partial
-        if @params[:installments] && @params[:installments][:value]
+        if @params[:installments].is_a?(Hash) && @params[:installments][:value]
           INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
         end
       end
@@ -237,11 +237,17 @@ module Adyen
         REFUSED    = 'Refused'
         ENROLLED_3D = 'RedirectShopper'
 
-        response_attrs :result_code, :auth_code, :refusal_reason, :psp_reference,
+        response_attrs :result_code, :auth_code, :refusal_reason, :psp_reference, :additional_data,
           :pa_request, :md, :issuer_url
 
         def success?
-          super && params[:result_code] == AUTHORISED || RECEIVED
+          if super && params[:result_code] == AUTHORISED
+            true
+          elsif super && params[:result_code] == RECEIVED
+            true
+          else
+            false 
+          end
         end
 
         def refused?

@@ -21,7 +21,6 @@ describe Adyen::API do
           :amount => { :currency => 'EUR', :value => 1234 },
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :card => { :expiry_month => 12, :expiry_year => 2012, :holder_name => "Simon Hopper", :number => '4444333322221111', :cvc => '737' },
-          :installments => nil,
           :recurring => false,
           :fraud_offset => nil
         )
@@ -38,7 +37,6 @@ describe Adyen::API do
           :amount => { :currency => 'EUR', :value => 1234 },
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :card => { :expiry_month => 12, :expiry_year => 2012, :holder_name => "Simon Hopper", :number => '4444333322221111', :cvc => '737' },
-          :installments => nil,
           :recurring => false,
           :fraud_offset => nil,
           browser_info: { accept_header: "hey", user_agent: "ho" }
@@ -58,7 +56,6 @@ describe Adyen::API do
           :amount => { :currency => 'EUR', :value => 1234 },
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :card => { :expiry_month => 12, :expiry_year => 2012, :holder_name => "Simon Hopper", :number => '4444333322221111', :cvc => '737' },
-          :installments => nil,
           :recurring => false,
           :fraud_offset => -100
         )
@@ -77,7 +74,6 @@ describe Adyen::API do
           :amount => { :currency => 'EUR', :value => 1234 },
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :card => { :expiry_month => 12, :expiry_year => 2012, :holder_name => "Simon Hopper", :number => '4444333322221111', :cvc => '737' },
-          :installments => 3,
           :recurring => true,
           :fraud_offset => nil
         )
@@ -85,7 +81,7 @@ describe Adyen::API do
           { :currency => 'EUR', :value => 1234 },
           { :reference => 'user-id', :email => 's.hopper@example.com' },
           { :expiry_month => 12, :expiry_year => 2012, :holder_name => "Simon Hopper", :number => '4444333322221111', :cvc => '737' },
-          :installments => 3, recurring: true
+          true
         )
       end
 
@@ -96,11 +92,12 @@ describe Adyen::API do
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :recurring_detail_reference => 'LATEST',
           :fraud_offset => nil,
-          :installments => nil
+          :installments => {:value => 6}
         )
         Adyen::API.authorise_recurring_payment('order-id',
           { :currency => 'EUR', :value => 1234 },
-          { :reference => 'user-id', :email => 's.hopper@example.com' }
+          { :reference => 'user-id', :email => 's.hopper@example.com' },
+          { :installments => {:value => 6} }
         )
       end
 
@@ -111,12 +108,14 @@ describe Adyen::API do
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
           :recurring_detail_reference => 'recurring-detail-reference',
           :fraud_offset => nil,
-          :installments => nil
+          :installments => {:value => 6} 
         )
         Adyen::API.authorise_recurring_payment('order-id',
           { :currency => 'EUR', :value => 1234 },
           { :reference => 'user-id', :email => 's.hopper@example.com' },
-          'recurring-detail-reference'
+          'recurring-detail-reference', 
+          nil,
+          {:installments => {:value => 6}}
         )
       end
 
@@ -125,15 +124,16 @@ describe Adyen::API do
           :reference => 'order-id',
           :amount => { :currency => 'EUR', :value => 1234 },
           :shopper => { :reference => 'user-id', :email => 's.hopper@example.com' },
+          :installments => {:value => 6},
           :recurring_detail_reference => 'recurring-detail-reference',
-          :fraud_offset => 50,
-          :installments => nil
+          :fraud_offset => 50
         )
         Adyen::API.authorise_recurring_payment('order-id',
           { :currency => 'EUR', :value => 1234 },
           { :reference => 'user-id', :email => 's.hopper@example.com' },
           'recurring-detail-reference',
-          50
+          50,
+          {:installments => {:value => 6}}
         )
       end
 
