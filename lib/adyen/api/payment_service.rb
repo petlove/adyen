@@ -134,10 +134,8 @@ module Adyen
       def payment_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
-        binding.pry
-
         content << amount_partial
-        content << installments_partial if @params[:installments]
+        content << installments_partial if @params[:installments][:value]
         content << shopper_partial if @params[:shopper]
         content << fraud_offset_partial if @params[:fraud_offset]
         content << browser_info_partial if @params[:browser_info]
