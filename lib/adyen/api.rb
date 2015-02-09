@@ -117,8 +117,6 @@ module Adyen
                  :card         => card, 
                }
 
-      binding.pry
-
       PaymentService.new(params.merge(options)).authorise_payment
     end
 
@@ -220,8 +218,6 @@ module Adyen
                  :shopper   => shopper,
                  :recurring_detail_reference => recurring_detail_reference,
                  :fraud_offset => fraud_offset}
-
-      binding.pry
 
       PaymentService.new(params.merge(options)).authorise_recurring_payment
     end
