@@ -215,7 +215,6 @@ module Adyen
 
     def authorise_recurring_payment(reference, amount, shopper, recurring_detail_reference = 'LATEST', fraud_offset = nil, options)
       
-
       params = { :reference => reference,
                  :amount    => amount,
                  :shopper   => shopper,
