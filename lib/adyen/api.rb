@@ -117,6 +117,8 @@ module Adyen
                  :card         => card, 
                }
 
+      binding.pry
+
       PaymentService.new(params.merge(options)).authorise_payment
     end
 
