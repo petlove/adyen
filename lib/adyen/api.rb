@@ -120,9 +120,6 @@ module Adyen
       PaymentService.new(params.merge(options)).authorise_payment
     end
 
-# vitulliCode: método semelhante ao authorise_payment, porém com argumentos referentes para 
-# montar os params que irão compor o boleto
-# este método chama o método de mesmo nome no arquivo payment_service.rb
 
     def authorise_boleto_payment(reference, amount, shopper, boleto, *args)
 
@@ -208,8 +205,6 @@ module Adyen
     #
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
-
-#vitulliCode: added options 
 
     def authorise_recurring_payment(reference, amount, shopper, recurring_detail_reference = 'LATEST', fraud_offset = nil, options)
       

@@ -45,8 +45,6 @@ module Adyen
         make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
-#vitulliCode: método semelhante ao "authorise_payment", porém com os elementos do boleto 
-
       def authorise_boleto_payment
         make_payment_request(authorise_boleto_payment_request_body, AuthorisationResponse)
       end
@@ -101,8 +99,6 @@ module Adyen
         payment_request_body(content)
       end
 
-#vitulliCode: método que vai enviar as informações para montar o corpo do xml a ser enviado para adyen
-
       def authorise_boleto_payment_request_body
         content = boleto_partial
         payment_boleto_request_body(content)
@@ -129,8 +125,6 @@ module Adyen
         payment_request_body(content)
       end
 
-# vitulliCode: método modificado para que fosse inserido Installments na requisição se houver
-
       def payment_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
@@ -143,8 +137,6 @@ module Adyen
 
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
-
-# vitulliCode: método que vai usar o layout e as informações passadas para montar o XML final a ser passado para a Adyen
 
       def payment_boleto_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
@@ -196,14 +188,10 @@ module Adyen
         end
       end
 
-# vitulliCode: método que vai usar o layout e as informações passadas para montar o XML a ser passado para a Adyen
-
       def boleto_partial
           boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :deliveryDate, :firstName, :lastName, :social_security)
           BOLETO_PARTIAL % boleto
       end
-
-# vitulliCode: método que vai usar o layout e as informações de parcelas (installments) passadas para montar o XML a ser enviado para a Adyen
 
       def installments_partial
         if @params[:installments].is_a?(Hash) && @params[:installments][:value]
@@ -240,10 +228,6 @@ module Adyen
 
         response_attrs :result_code, :auth_code, :refusal_reason, :psp_reference, :additional_data,
           :pa_request, :md, :issuer_url
-
-#vitulliCode: this method was modified in order to receive the "received" notification
-# respose about billet payment
-
 
         def success?
           if super && params[:result_code] == AUTHORISED
