@@ -41,7 +41,7 @@ module Adyen
       ENDPOINT_URI = 'https://pal-%s.adyen.com/pal/servlet/soap/Payment'
 
       # @see API.authorise_payment
-      def authorise_payment            
+      def authorise_payment
         make_payment_request(authorise_payment_request_body, AuthorisationResponse)
       end
 
@@ -50,12 +50,12 @@ module Adyen
       end
 
       # @see API.authorise3d_payment
-      def authorise3d_payment        
+      def authorise3d_payment
         make_payment_request(authorise3d_payment_request_body, AuthorisationResponse)
       end
 
       # @see API.authorise_recurring_payment
-      def authorise_recurring_payment  
+      def authorise_recurring_payment
         make_payment_request(authorise_recurring_payment_request_body, AuthorisationResponse)
       end
 
@@ -70,7 +70,7 @@ module Adyen
       end
 
       # @see API.refund_payment
-      def refund  
+      def refund
         make_payment_request(refund_request_body, RefundResponse)
       end
 
@@ -86,7 +86,7 @@ module Adyen
 
       private
 
-      def make_payment_request(data, response_class)        
+      def make_payment_request(data, response_class)
         call_webservice_action('authorise', data, response_class)
       end
 
@@ -129,11 +129,10 @@ module Adyen
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
         content << amount_partial
-        content << installments_partial if @params[:installments][:value]
+        content << installments_partial if @params[:installments].to_h[:value]
         content << shopper_partial if @params[:shopper]
         content << fraud_offset_partial if @params[:fraud_offset]
         content << browser_info_partial if @params[:browser_info]
-
 
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
@@ -142,7 +141,7 @@ module Adyen
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
 
         content << amount_boleto_partial
-        
+
         BOLETO_LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
 
@@ -189,8 +188,8 @@ module Adyen
       end
 
       def boleto_partial
-          boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :deliveryDate, :firstName, :lastName, :social_security)
-          BOLETO_PARTIAL % boleto
+        boleto  = @params[:boleto].values_at(:city, :house, :postal, :state, :street, :deliveryDate, :firstName, :lastName, :document_number)
+        BOLETO_PARTIAL % boleto
       end
 
       def installments_partial
@@ -235,7 +234,7 @@ module Adyen
           elsif super && params[:result_code] == RECEIVED
             true
           else
-            false 
+            false
           end
         end
 
