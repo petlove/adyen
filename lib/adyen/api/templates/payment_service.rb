@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Adyen
   module API
     class PaymentService < SimpleSOAPClient
@@ -46,8 +47,9 @@ EOS
     </payment:authorise>
 EOS
 
+      # @private
       BOLETO_LAYOUT = <<EOS
-    <authorise xmlns="http://payment.services.adyen.com"> 
+    <authorise xmlns="http://payment.services.adyen.com">
       <paymentRequest>
         <merchantAccount>%s</merchantAccount>
         <reference>%s</reference>
@@ -55,7 +57,6 @@ EOS
       </paymentRequest>
     </authorise>
 EOS
-
 
       # @private
       LAYOUT_3D = <<EOS
@@ -85,7 +86,7 @@ EOS
         </amount>
 EOS
 
-
+      # @private
       BOLETO_PARTIAL = <<EOS
         <billingAddress>
           <ns3:city xmlns:ns3="http://common.services.adyen.com">%s</ns3:city>
