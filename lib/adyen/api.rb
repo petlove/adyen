@@ -30,8 +30,8 @@ module Adyen
   #     config.adyen.default_api_params = { :merchant_account => 'MerchantAccount' }
   #
   # Note that you'll need an Adyen notification PSP reference for some of the calls. Because of
-  # this, store all notifications that Adyen sends to you. Moreover, the responses to these calls 
-  # do *not* tell you whether or not the requested action was successful. For this you will also 
+  # this, store all notifications that Adyen sends to you. Moreover, the responses to these calls
+  # do *not* tell you whether or not the requested action was successful. For this you will also
   # have to check the notification.
   #
   # = Authorising payments
@@ -104,7 +104,6 @@ module Adyen
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
     def authorise_payment(reference, amount, shopper, card, *args)
-      
       options = if args.first.is_a? Hash
                   { :recurring => false, :fraud_offset => nil }.merge!(args.first)
                 else
@@ -114,15 +113,13 @@ module Adyen
       params = { :reference    => reference,
                  :amount       => amount,
                  :shopper      => shopper,
-                 :card         => card, 
+                 :card         => card
                }
 
       PaymentService.new(params.merge(options)).authorise_payment
     end
 
-
     def authorise_boleto_payment(reference, amount, shopper, boleto, *args)
-
       params = { :reference    => reference,
                  :amount       => amount,
                  :shopper      => shopper,
@@ -207,7 +204,7 @@ module Adyen
     #                                                 authorisation status.
 
     def authorise_recurring_payment(reference, amount, shopper, recurring_detail_reference = 'LATEST', fraud_offset = nil, options)
-      
+
       params = { :reference => reference,
                  :amount    => amount,
                  :shopper   => shopper,
