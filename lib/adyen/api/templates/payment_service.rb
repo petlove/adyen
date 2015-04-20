@@ -102,7 +102,15 @@ EOS
           <ns9:firstName xmlns:ns9="http://common.services.adyen.com">%s</ns9:firstName>
           <ns10:lastName xmlns:ns10="http://common.services.adyen.com">%s</ns10:lastName>
         </shopperName>
-        <shopperStatement>Aceitar o pagamento até 15 dias após o vencimento. Não cobrar juros. Não aceitar o pagamento com cheque.</shopperStatement>
+        <shopperStatement>
+            SR caixa: Não receber após o vencimento.
+
+            Não poderemos garantir a disponibilidade dos produtos desse pedido para pagamentos
+            fora do prazo (2 dias). O prazo de compensação é de 1 dia util e o prazo de entrega
+            começa a ser contado a partir da compensação desse boleto, ou seja, adicione um dia
+            util a mais a data inicial da entrega. Vencimentos no sábado ou domingo podem ser
+            pagos na segunda feira.
+        </shopperStatement>
         <socialSecurityNumber>%s</socialSecurityNumber>
 EOS
 
