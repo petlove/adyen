@@ -474,4 +474,68 @@ describe Adyen::API::PaymentService do
     node_for_current_object_and_method.xpath('//payment:authorise/payment:paymentRequest')
   end
 end
+  
+describe 'Render XML Template' do
+  describe 'authorise_boleto_payment' do
 
+    let(:reference) { { reference: 111, email: 'test@test.com', ip: '8.8.8.8', statement: 'invoice number 123456' } }
+
+    let(:params) do 
+      { 
+        reference: reference,
+        amount: { currency: 'BRL', value: 99999.00 },
+        boleto: {
+          city: 'São Paulo', 
+          house: 111, 
+          postal: '05801000', 
+          state: 'SP', 
+          street: 'Av. Engenheiro Luiz Carlos Berrini', 
+          deliveryDate: (Time.parse('25/11/2015').utc).round.iso8601(3), 
+          firstName: 'User', 
+          lastName: 'Tester Spec',
+          document_number: '62187632342'
+        } 
+      } 
+    end
+
+    before do
+      @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
+      @payment_service = Adyen::API::PaymentService.new(params)
+      @result_string = %q(        <billingAddress>
+          <ns3:city xmlns:ns3="http://common.services.adyen.com">São Paulo</ns3:city>
+          <ns4:country xmlns:ns4="http://common.services.adyen.com">BR</ns4:country>
+          <ns5:houseNumberOrName xmlns:ns5="http://common.services.adyen.com">111</ns5:houseNumberOrName>
+          <ns6:postalCode xmlns:ns6="http://common.services.adyen.com">05801000</ns6:postalCode>
+          <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">SP</ns7:stateOrProvince>
+          <ns8:street xmlns:ns8="http://common.services.adyen.com">Av. Engenheiro Luiz Carlos Berrini</ns8:street>
+        </billingAddress>
+        <deliveryDate xmlns="http://payment.services.adyen.com">2015-11-25T02:00:00.000Z</deliveryDate>
+        <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_itau</selectedBrand>
+        <shopperName xmlns="http://payment.services.adyen.com">
+          <ns9:firstName xmlns:ns9="http://common.services.adyen.com">User</ns9:firstName>
+          <ns10:lastName xmlns:ns10="http://common.services.adyen.com">Tester Spec</ns10:lastName>
+        </shopperName>
+        <shopperStatement>
+            SR caixa: Não receber após o vencimento.
+
+            Não poderemos garantir a disponibilidade dos produtos desse pedido para pagamentos
+            fora do prazo (2 dias). O prazo de compensação é de 1 dia util e o prazo de entrega
+            começa a ser contado a partir da compensação desse boleto, ou seja, adicione um dia
+            util a mais a data inicial da entrega. Vencimentos no sábado ou domingo podem ser
+            pagos na segunda feira.
+        </shopperStatement>
+        <socialSecurityNumber>62187632342</socialSecurityNumber>
+)
+    end
+
+    after do
+      remove_request_stub(@stub_get)
+    end
+
+    it 'should return adyen compliance xml for boleto' do
+      expect(@payment_service).to receive(:payment_boleto_request_body).with(@result_string)
+      @payment_service.authorise_boleto_payment
+    end
+
+  end
+end
