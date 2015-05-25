@@ -84,32 +84,32 @@ describe Adyen::Form do
     end
 
     it "should check the signature correctly with explicit shared signature" do
-      Adyen::Form.redirect_signature_check(@params, 'Kah942*$7sdp0)').should be_true
+      Adyen::Form.redirect_signature_check(@params, 'Kah942*$7sdp0)').should be_truthy
     end
 
     it "should check the signature correctly using the stored shared secret" do
-      Adyen::Form.redirect_signature_check(@params).should be_true
+      Adyen::Form.redirect_signature_check(@params).should be_truthy
     end
 
     it "should raise ArgumentError on missing skinCode" do
       expect do
         @params.delete(:skinCode)
-        Adyen::Form.redirect_signature_check(@params).should be_false
+        Adyen::Form.redirect_signature_check(@params).should be_falsey
       end.to raise_error ArgumentError
     end
 
     it "should raise ArgumentError on empty input" do
       expect do
-        Adyen::Form.redirect_signature_check({}).should be_false
+        Adyen::Form.redirect_signature_check({}).should be_falsey
       end.to raise_error ArgumentError
     end
 
     it "should detect a tampered field" do
-      Adyen::Form.redirect_signature_check(@params.merge(:pspReference => 'tampered')).should be_false
+      Adyen::Form.redirect_signature_check(@params.merge(:pspReference => 'tampered')).should be_falsey
     end
 
     it "should detect a tampered signature" do
-      Adyen::Form.redirect_signature_check(@params.merge(:merchantSig => 'tampered')).should be_false
+      Adyen::Form.redirect_signature_check(@params.merge(:merchantSig => 'tampered')).should be_falsey
     end
 
   end
