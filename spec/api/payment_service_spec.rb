@@ -490,7 +490,7 @@ describe 'Render XML Template' do
           postal: '05801000', 
           state: 'SP', 
           street: 'Av. Engenheiro Luiz Carlos Berrini', 
-          deliveryDate: (Time.parse('25/11/2015').utc).round.iso8601(3), 
+          deliveryDate: '2015-11-25T00:00:00.000Z', 
           firstName: 'User', 
           lastName: 'Tester Spec',
           document_number: '62187632342'
@@ -499,6 +499,7 @@ describe 'Render XML Template' do
     end
 
     before do
+      WebMock.disable_net_connect!(:allow_localhost => true)
       @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
       @payment_service = Adyen::API::PaymentService.new(params)
       @result_string = %q(        <billingAddress>
@@ -509,7 +510,7 @@ describe 'Render XML Template' do
           <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">SP</ns7:stateOrProvince>
           <ns8:street xmlns:ns8="http://common.services.adyen.com">Av. Engenheiro Luiz Carlos Berrini</ns8:street>
         </billingAddress>
-        <deliveryDate xmlns="http://payment.services.adyen.com">2015-11-25T02:00:00.000Z</deliveryDate>
+        <deliveryDate xmlns="http://payment.services.adyen.com">2015-11-25T00:00:00.000Z</deliveryDate>
         <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_itau</selectedBrand>
         <shopperName xmlns="http://payment.services.adyen.com">
           <ns9:firstName xmlns:ns9="http://common.services.adyen.com">User</ns9:firstName>
@@ -530,6 +531,7 @@ describe 'Render XML Template' do
 
     after do
       remove_request_stub(@stub_get)
+      WebMock.allow_net_connect!
     end
 
     it 'should return adyen compliance xml for boleto' do
@@ -574,6 +576,7 @@ describe 'Render XML Template' do
     end
 
     before do
+      WebMock.disable_net_connect!(:allow_localhost => true)
       @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
       @payment_service = Adyen::API::PaymentService.new(params)
       @result_string = %q(<additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
@@ -591,6 +594,7 @@ describe 'Render XML Template' do
 
     after do
       remove_request_stub(@stub_get)
+      WebMock.allow_net_connect!
     end
 
     it 'should return adyen compliance xml for credit card' do
