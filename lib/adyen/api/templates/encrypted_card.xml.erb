@@ -1,0 +1,7 @@
+<additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
+<additionalData xmlns="http://payment.services.adyen.com">
+  <entry>
+    <key xsi:type="xsd:string">card.encrypted.json</key>
+    <value xsi:type="xsd:string"><%= @params[:card][:encrypted][:json] %></value>
+  </entry>
+</additionalData>

@@ -568,20 +568,21 @@ describe 'Render XML Template' do
         },
         installments: {
           value: 1
-        }
+        },
+        bill_address: {}
       } 
     end
 
     before do
       @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
       @payment_service = Adyen::API::PaymentService.new(params)
-      @result_string = %q(        <additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
-        <additionalData xmlns="http://payment.services.adyen.com">
-          <entry>
-            <key xsi:type="xsd:string">card.encrypted.json</key>
-            <value xsi:type="xsd:string">adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3</value>
-          </entry>
-        </additionalData>
+      @result_string = %q(<additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
+<additionalData xmlns="http://payment.services.adyen.com">
+  <entry>
+    <key xsi:type="xsd:string">card.encrypted.json</key>
+    <value xsi:type="xsd:string">adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3</value>
+  </entry>
+</additionalData>
         <payment:recurring>
           <payment:contract>RECURRING,ONECLICK</payment:contract>
         </payment:recurring>
