@@ -215,7 +215,7 @@ module Adyen
       end
 
       def shopper_partial
-        @params[:shopper].map{ |k, v| SHOPPER_PARTIALS[k] % v }.join("\n")
+        @params[:shopper].map{ |k, v| SHOPPER_PARTIALS[k] % v if SHOPPER_PARTIALS[k] }.join("\n")
       end
 
       def fraud_offset_partial
