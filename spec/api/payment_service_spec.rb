@@ -474,4 +474,209 @@ describe Adyen::API::PaymentService do
     node_for_current_object_and_method.xpath('//payment:authorise/payment:paymentRequest')
   end
 end
+  
+describe 'Render XML Template' do
+  describe 'authorise_boleto_payment' do
 
+    let(:reference) { { reference: 111, email: 'test@test.com', ip: '8.8.8.8', statement: 'invoice number 123456' } }
+
+    let(:params) do 
+      { 
+        reference: reference,
+        amount: { currency: 'BRL', value: 99999.00 },
+        boleto: {
+          city: 'São Paulo', 
+          house: 111, 
+          postal: '05801000', 
+          state: 'SP', 
+          street: 'Av. Engenheiro Luiz Carlos Berrini', 
+          deliveryDate: '2015-11-25T00:00:00.000Z', 
+          firstName: 'User', 
+          lastName: 'Tester Spec',
+          document_number: '62187632342'
+        } 
+      } 
+    end
+
+    before do
+      WebMock.disable_net_connect!(:allow_localhost => true)
+      @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
+      @payment_service = Adyen::API::PaymentService.new(params)
+      @result_string = %q(        <billingAddress>
+          <ns3:city xmlns:ns3="http://common.services.adyen.com">São Paulo</ns3:city>
+          <ns4:country xmlns:ns4="http://common.services.adyen.com">BR</ns4:country>
+          <ns5:houseNumberOrName xmlns:ns5="http://common.services.adyen.com">111</ns5:houseNumberOrName>
+          <ns6:postalCode xmlns:ns6="http://common.services.adyen.com">05801000</ns6:postalCode>
+          <ns7:stateOrProvince xmlns:ns7="http://common.services.adyen.com">SP</ns7:stateOrProvince>
+          <ns8:street xmlns:ns8="http://common.services.adyen.com">Av. Engenheiro Luiz Carlos Berrini</ns8:street>
+        </billingAddress>
+        <deliveryDate xmlns="http://payment.services.adyen.com">2015-11-25T00:00:00.000Z</deliveryDate>
+        <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_itau</selectedBrand>
+        <shopperName xmlns="http://payment.services.adyen.com">
+          <ns9:firstName xmlns:ns9="http://common.services.adyen.com">User</ns9:firstName>
+          <ns10:lastName xmlns:ns10="http://common.services.adyen.com">Tester Spec</ns10:lastName>
+        </shopperName>
+        <shopperStatement>
+            SR caixa: Não receber após o vencimento.
+
+            Não poderemos garantir a disponibilidade dos produtos desse pedido para pagamentos
+            fora do prazo (2 dias). O prazo de compensação é de 1 dia util e o prazo de entrega
+            começa a ser contado a partir da compensação desse boleto, ou seja, adicione um dia
+            util a mais a data inicial da entrega. Vencimentos no sábado ou domingo podem ser
+            pagos na segunda feira.
+        </shopperStatement>
+        <socialSecurityNumber>62187632342</socialSecurityNumber>
+)
+    end
+
+    after do
+      remove_request_stub(@stub_get)
+      WebMock.allow_net_connect!
+    end
+
+    it 'should return adyen compliance xml for boleto' do
+      expect(@payment_service).to receive(:payment_boleto_request_body).with(@result_string)
+      @payment_service.authorise_boleto_payment
+    end
+
+  end
+
+  describe 'authorise_payment' do
+
+    let(:params) do 
+      { 
+        merchant_account: 'PetloveCOM',
+        reference: 'R099043148',
+        amount: {
+          currency: 'BRL',
+          value: 1800
+        },
+        shopper: {
+          reference: '62187632342',
+          email: 'tester@email.com',
+          ip: '127.0.0.1',
+          statement: 'Order # R099043148'
+        },
+        card: {
+          encrypted: {
+            json: 'adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3'
+          }
+        },
+        recurring: true,
+        fraud_offset: nil,
+        browser_info: {
+          accept_header: 'application/json',
+          user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36'
+        },
+        installments: {
+          value: 1
+        },
+        bill_address: {}
+      } 
+    end
+
+    before do
+      WebMock.disable_net_connect!(:allow_localhost => true)
+      @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
+      @payment_service = Adyen::API::PaymentService.new(params)
+      @result_string = %q(<additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
+<additionalData xmlns="http://payment.services.adyen.com">
+  <entry>
+    <key xsi:type="xsd:string">card.encrypted.json</key>
+    <value xsi:type="xsd:string">adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3</value>
+  </entry>
+</additionalData>
+        <payment:recurring>
+          <payment:contract>RECURRING,ONECLICK</payment:contract>
+        </payment:recurring>
+)
+    end
+
+    after do
+      remove_request_stub(@stub_get)
+      WebMock.allow_net_connect!
+    end
+
+    it 'should return adyen compliance xml for credit card' do
+      expect(@payment_service).to receive(:payment_request_body).with(@result_string)
+      @payment_service.authorise_payment
+    end
+
+  end
+
+  describe 'authorise_payment' do
+
+    let(:params) do 
+      { 
+        merchant_account: 'PetloveCOM',
+        reference: 'R099043148',
+        amount: {
+          currency: 'BRL',
+          value: 1800
+        },
+        shopper: {
+          reference: '62187632342',
+          email: 'tester@email.com',
+          ip: '127.0.0.1',
+          statement: 'Order # R099043148',
+          bill_address: {
+            street: 'rua das borboletas 15',
+            city: 'São Paulo',
+            state: 'SP',
+            postal_code: '11111111',
+            country: 'BR',
+            house_number: 22
+          },
+          ship_address: {
+            street: 'rua das borboletas 15',
+            city: 'São Paulo',
+            state: 'SP',
+            postal_code: '11111111',
+            country: 'BR',
+            house_number: 22
+          }
+        },
+        card: {
+          encrypted: {
+            json: 'adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3'
+          }
+        },
+        recurring: true,
+        fraud_offset: nil,
+        browser_info: {
+          accept_header: 'application/json',
+          user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36'
+        },
+        installments: {
+          value: 1
+        }
+      } 
+    end
+
+    before do
+      @stub_get = stub_request(:post, "https://SuperShopper:secret@pal-test.adyen.com/pal/servlet/soap/Payment").to_return(:body => "success")
+      @payment_service = Adyen::API::PaymentService.new(params)
+      @result_string = %q(<additionalAmount xmlns="http://payment.services.adyen.com" xsi:nil="true" />
+<additionalData xmlns="http://payment.services.adyen.com">
+  <entry>
+    <key xsi:type="xsd:string">card.encrypted.json</key>
+    <value xsi:type="xsd:string">adyenjs_0_1_10$h9XQC/imWhm1Nbvh6F0BJTKXFadGUaSicPXKAAk+WEGZKozbvOswnpRJcyLp/8mL33ZK7buqaQoKqCRZzEz/vWIBZmcXmiPbDIlgUBgxL/58bN4SBji6Rs1UPKJg3LKW/FK9dM3QuL6ybkYz68yYdnKKs6ZTiLjaTJimv+nBY/Nme7S3jseYzR7dxwt8xScaPMd/+4EJQEHcu3Z6yUA7F170jCKClVOdztN90UwK/JifjKV/oTYNjN9yigdUS9EhLzm+ICOtBcPjo9qQkhm+y9dxS4ZM7M5bUgPJNYzqh9h29i9dMZWqgHq/yfoc/OqP9A3/7FxosxmpMtkwlwcMbA==$TUXpbeUKI98Y5yuHbZ29leew2Y9LY2Zxn/VQ5r75F/ELQMQyhS3FzKPaYTyHPrZZatPqakkmG9UIH8R9jPqIFFUfDqM1g8/FVkNUnk17kLAUnyGSbq0y8OJdokyhexNylbjztcl0gs+XMD500qjpGXvrwCrHb3UsBvuvZOjxy3xexG+MsYHc4wX+kwJvuGXd7FyoNyQ7+EG0j2LCJKppt43k46m3</value>
+  </entry>
+</additionalData>
+        <payment:recurring>
+          <payment:contract>RECURRING,ONECLICK</payment:contract>
+        </payment:recurring>
+)
+    end
+
+    after do
+      remove_request_stub(@stub_get)
+    end
+
+    it 'should return adyen compliance xml for credit card with addresses' do
+      expect(@payment_service).to receive(:payment_request_body).with(@result_string)
+      @payment_service.authorise_payment
+    end
+
+  end
+end

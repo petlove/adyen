@@ -1,5 +1,6 @@
 require 'adyen/api/simple_soap_client'
 require 'adyen/api/templates/payment_service'
+require 'erb'
 
 module Adyen
   module API
@@ -133,6 +134,15 @@ module Adyen
         content << shopper_partial if @params[:shopper]
         content << fraud_offset_partial if @params[:fraud_offset]
         content << browser_info_partial if @params[:browser_info]
+        unless @params[:shopper].to_h[:bill_address].nil?
+          content << render_template('bill_address')
+          @params[:shopper].delete :bill_address
+        end
+
+        unless @params[:shopper].to_h[:ship_address].nil?
+          content << render_template('delivery_address')
+          @params[:shopper].delete :ship_address
+        end
 
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
       end
@@ -178,13 +188,19 @@ module Adyen
 
       def card_partial
         if @params[:card] and @params[:card][:encrypted] and @params[:card][:encrypted][:json]
-          ENCRYPTED_CARD_PARTIAL % [@params[:card][:encrypted][:json]]
+          # ENCRYPTED_CARD_PARTIAL % [@params[:card][:encrypted][:json]]
+          render_template 'encrypted_card'
         else
           validate_parameters!(:card => [:holder_name, :number, :cvc, :expiry_year, :expiry_month])
           card  = @params[:card].values_at(:holder_name, :number, :cvc, :expiry_year)
           card << @params[:card][:expiry_month].to_i
           CARD_PARTIAL % card
         end
+      end
+
+      def render_template(template_name)
+        template = File.expand_path("../templates/#{template_name}.xml.erb", __FILE__)
+        erb = ERB.new(File.read(template)).result binding
       end
 
       def boleto_partial
@@ -199,7 +215,7 @@ module Adyen
       end
 
       def shopper_partial
-        @params[:shopper].map { |k, v| SHOPPER_PARTIALS[k] % v }.join("\n")
+        @params[:shopper].map{ |k, v| SHOPPER_PARTIALS[k] % v }.join("\n")
       end
 
       def fraud_offset_partial
