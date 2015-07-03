@@ -173,10 +173,11 @@ EOS
 
       # @private
       SHOPPER_PARTIALS = {
-        :reference => '        <payment:shopperReference>%s</payment:shopperReference>',
-        :email     => '        <payment:shopperEmail>%s</payment:shopperEmail>',
-        :ip        => '        <payment:shopperIP>%s</payment:shopperIP>',
-        :statement => '        <payment:shopperStatement>%s</payment:shopperStatement>',
+        :reference              => '<payment:shopperReference>%s</payment:shopperReference>',
+        :email                  => '<payment:shopperEmail>%s</payment:shopperEmail>',
+        :ip                     => '<payment:shopperIP>%s</payment:shopperIP>',
+        :statement              => '<payment:shopperStatement>%s</payment:shopperStatement>',
+        :social_security_number => '<payment:socialSecurityNumber>%s</payment:socialSecurityNumber>'
       }
 
       # @private

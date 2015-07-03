@@ -254,14 +254,14 @@ module Adyen
     #
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
-    def authorise_one_click_payment(reference, amount, shopper, card_cvc, recurring_detail_reference, fraud_offset = nil)
+    def authorise_one_click_payment(reference, amount, shopper, card_cvc, recurring_detail_reference, fraud_offset = nil, options = {})
       params = { :reference => reference,
                  :amount    => amount,
                  :shopper   => shopper,
                  :card      => { :cvc => card_cvc },
                  :recurring_detail_reference => recurring_detail_reference,
                  :fraud_offset => fraud_offset }
-      PaymentService.new(params).authorise_one_click_payment
+      PaymentService.new(params.merge(options.except(:recurring))).authorise_one_click_payment
     end
 
     # Capture an authorised payment.
