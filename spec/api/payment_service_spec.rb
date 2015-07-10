@@ -511,7 +511,7 @@ describe 'Render XML Template' do
           <ns8:street xmlns:ns8="http://common.services.adyen.com">Av. Engenheiro Luiz Carlos Berrini</ns8:street>
         </billingAddress>
         <deliveryDate xmlns="http://payment.services.adyen.com">2015-11-25T00:00:00.000Z</deliveryDate>
-        <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_itau</selectedBrand>
+        <selectedBrand xmlns="http://payment.services.adyen.com">boletobancario_bradesco</selectedBrand>
         <shopperName xmlns="http://payment.services.adyen.com">
           <ns9:firstName xmlns:ns9="http://common.services.adyen.com">User</ns9:firstName>
           <ns10:lastName xmlns:ns10="http://common.services.adyen.com">Tester Spec</ns10:lastName>
