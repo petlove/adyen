@@ -261,7 +261,8 @@ module Adyen
                  :card      => { :cvc => card_cvc },
                  :recurring_detail_reference => recurring_detail_reference,
                  :fraud_offset => fraud_offset }
-      PaymentService.new(params.merge(options.except(:recurring))).authorise_one_click_payment
+      options.delete(:recurring)
+      PaymentService.new(params.merge(options)).authorise_one_click_payment
     end
 
     # Capture an authorised payment.
