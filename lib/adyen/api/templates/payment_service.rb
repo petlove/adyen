@@ -163,7 +163,7 @@ EOS
       # @private
       ONE_CLICK_PAYMENT_BODY_PARTIAL = <<EOS
         <payment:recurring>
-          <payment:contract>ONECLICK</payment:contract>
+          <payment:contract>RECURRING,ONECLICK</payment:contract>
         </payment:recurring>
         <payment:selectedRecurringDetailReference>%s</payment:selectedRecurringDetailReference>
         <payment:card>
