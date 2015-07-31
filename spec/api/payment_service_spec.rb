@@ -107,7 +107,7 @@ describe Adyen::API::PaymentService do
         #:start_year => ,
       },
       :installments => {
-        :value => 6      
+        :value => 6
       },
       :recurring_detail_reference => 'RecurringDetailReference1',
       :fraud_offset => 30
@@ -307,7 +307,7 @@ describe Adyen::API::PaymentService do
                                           :card    => [:cvc]
 
     it "includes the contract type, which is `ONECLICK'" do
-      text('./payment:recurring/payment:contract').should == 'ONECLICK'
+      text('./payment:recurring/payment:contract').should == 'RECURRING,ONECLICK'
     end
 
     it "does not include the self-‘describing’ nonsense parameters" do
@@ -474,28 +474,28 @@ describe Adyen::API::PaymentService do
     node_for_current_object_and_method.xpath('//payment:authorise/payment:paymentRequest')
   end
 end
-  
+
 describe 'Render XML Template' do
   describe 'authorise_boleto_payment' do
 
     let(:reference) { { reference: 111, email: 'test@test.com', ip: '8.8.8.8', statement: 'invoice number 123456' } }
 
-    let(:params) do 
-      { 
+    let(:params) do
+      {
         reference: reference,
         amount: { currency: 'BRL', value: 99999.00 },
         boleto: {
-          city: 'São Paulo', 
-          house: 111, 
-          postal: '05801000', 
-          state: 'SP', 
-          street: 'Av. Engenheiro Luiz Carlos Berrini', 
-          deliveryDate: '2015-11-25T00:00:00.000Z', 
-          firstName: 'User', 
+          city: 'São Paulo',
+          house: 111,
+          postal: '05801000',
+          state: 'SP',
+          street: 'Av. Engenheiro Luiz Carlos Berrini',
+          deliveryDate: '2015-11-25T00:00:00.000Z',
+          firstName: 'User',
           lastName: 'Tester Spec',
           document_number: '62187632342'
-        } 
-      } 
+        }
+      }
     end
 
     before do
@@ -543,8 +543,8 @@ describe 'Render XML Template' do
 
   describe 'authorise_payment' do
 
-    let(:params) do 
-      { 
+    let(:params) do
+      {
         merchant_account: 'PetloveCOM',
         reference: 'R099043148',
         amount: {
@@ -572,7 +572,7 @@ describe 'Render XML Template' do
           value: 1
         },
         bill_address: {}
-      } 
+      }
     end
 
     before do
@@ -606,8 +606,8 @@ describe 'Render XML Template' do
 
   describe 'authorise_payment' do
 
-    let(:params) do 
-      { 
+    let(:params) do
+      {
         merchant_account: 'PetloveCOM',
         reference: 'R099043148',
         amount: {
@@ -650,7 +650,7 @@ describe 'Render XML Template' do
         installments: {
           value: 1
         }
-      } 
+      }
     end
 
     before do
