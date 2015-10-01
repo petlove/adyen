@@ -131,7 +131,10 @@ module Adyen
 
         content << amount_partial
         content << installments_partial if @params[:installments].to_h[:value]
-        content << shopper_partial if @params[:shopper]
+        if @params[:shopper]
+          content << shopper_partial
+          content << shopper_name_partial
+        end
         content << fraud_offset_partial if @params[:fraud_offset]
         content << browser_info_partial if @params[:browser_info]
         unless @params[:shopper].to_h[:bill_address].nil?
@@ -216,6 +219,10 @@ module Adyen
 
       def shopper_partial
         @params[:shopper].map{ |k, v| SHOPPER_PARTIALS[k] % v if SHOPPER_PARTIALS[k] }.join("\n")
+      end
+
+      def shopper_name_partial
+        render_template('shopper_name') if @params[:shopper].to_h[:name].present? 
       end
 
       def fraud_offset_partial
