@@ -222,7 +222,7 @@ module Adyen
       end
 
       def shopper_name_partial
-        render_template('shopper_name') if @params[:shopper].to_h[:name].present? 
+        @params[:shopper].to_h[:name].nil? ? '' : render_template('shopper_name') 
       end
 
       def fraud_offset_partial
