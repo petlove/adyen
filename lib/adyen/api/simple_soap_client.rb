@@ -118,7 +118,7 @@ EOS
           request = Net::HTTP.new(endpoint.host, endpoint.port)
           request.use_ssl = true
           request.ca_file = CACERT
-          request.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          request.verify_mode = OpenSSL::SSL::VERIFY_NONE
           request.set_debug_output $stdout
 
           request.start do |http|

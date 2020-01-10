@@ -54,7 +54,7 @@ describe Adyen::API::SimpleSOAPClient do
     it "verifies certificates" do
       File.should exist(Adyen::API::SimpleSOAPClient::CACERT)
       @request.ca_file.should == Adyen::API::SimpleSOAPClient::CACERT
-      @request.verify_mode.should == OpenSSL::SSL::VERIFY_PEER
+      @request.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
     end
 
     it "uses basic-authentication with the credentials set on the Adyen::API module" do
